@@ -17,7 +17,7 @@ All development files are in the `/dist` folder.
 
 `npm run dev` is for development enviroment. will generate all needed production files on `dist` folder. It includes the processing of sass files.
 
-# TODO
+## TODO
 
 1.  Implement `servor` on package script for running a local server for `npm run build`
 2.  Add `compression-webpack-plugin` plugin for dist files ¿?
