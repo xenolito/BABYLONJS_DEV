@@ -1,4 +1,4 @@
-# BABYLONJS ES6 WEBPACK Boilerplate with Tree shaking
+# BABYLONJS ES6 WEBPACK Boilerplate (with Tree shaking)
 
 A quick Babylonjs boilerplate for start developing straight away.
 
