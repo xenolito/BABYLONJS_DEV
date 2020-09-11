@@ -1,0 +1,30 @@
+:root {
+  --main-color: #ff1743;
+  --def-font-family: Helvetica, Arial, sans-serif;
+}
+
+/*
+html,
+body {
+    margin: 0;
+    overflow-x: hidden;
+}
+*/
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0px;
+  padding: 0px;
+  overflow: hidden;
+  font-size: 16px;
+  font-family: var(--def-font-family);
+  font-size: 1rem;
+  line-height: 1.2rem;
+}
+
+canvas {
+  outline: none;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0); /* mobile webkit */
+}
