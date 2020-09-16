@@ -10,10 +10,12 @@ import { GridMaterial } from "@babylonjs/materials/grid";
 // Required side effects to populate the Create methods on the mesh class. Without this, the bundle would be smaller but the createXXX methods from mesh would not be accessible.
 import "@babylonjs/core/Meshes/meshBuilder";
 
-import { GLTFLoader } from "@babylonjs/loaders/glTF/2.0/glTFLoader";
-
-import { SceneLoader } from "@babylonjs/core/Loading/sceneLoader";
 //import "@babylonjs/loaders";
+import { GLTFLoader } from "@babylonjs/loaders/glTF/2.0/glTFLoader";
+import { SceneLoader } from "@babylonjs/core/Loading/sceneLoader";
+
+//Meshes to load config object
+import { Meshes } from "./gltf_models";
 
 /*** CSS ***/
 import "./css/global.scss";
@@ -29,7 +31,6 @@ import "@babylonjs/inspector";
 
 (function () {
   let divFps = document.getElementById("fps");
-  const assetsBaseURL = "https://webgl.pictau.com/3Dassets/meshes/";
   // Get the canvas element from the DOM.
   const canvas = document.getElementById("renderCanvas");
 
@@ -95,10 +96,10 @@ camera.attachControl(canvas, true);
     */
 
   // Our built-in 'ground' shape. Params: name, width, depth, subdivs, scene
-  var ground = Mesh.CreateGround("ground1", 6, 6, 2, scene);
+  //  var ground = Mesh.CreateGround("ground1", 6, 6, 2, scene);
 
   // Affect a material
-  ground.material = material;
+  //ground.material = material;
 
   //scene.debugLayer.show();
 
@@ -142,35 +143,14 @@ camera.attachControl(canvas, true);
     );
     */
 
-  const gltfMeshesToTest = {
-    baseURL: assetsBaseURL,
-    meshes: {
-      alien: {
-        dir: "Alien",
-        mesh: "Alien.gltf",
-        scale: 2,
-        position: { x: -0.5, y: 1.5 },
-      },
-      brainStem: {
-        dir: "BrainStem",
-        mesh: "BrainStem.gltf",
-        scale: 1.5,
-      },
-      cloth: {
-        dir: "Sheen",
-        mesh: "Cloth.gltf",
-        position: { x: -0.5, y: 0.01 },
-      },
-      fan: {
-        dir: "vintageDeskFan",
-        mesh: "vintageFan_animated.gltf",
-        scale: 0.08,
-        position: { x: 0, y: 0, z: 0 },
-      },
-    },
-  };
+  const lastMesh = Object.keys(Meshes.meshes)[
+    Object.keys(Meshes.meshes).length - 1
+  ];
 
-  let loadMesh = loadMeshGltf("fan");
+  let loadMesh = loadMeshGltf(lastMesh);
+  /*let loadMesh = loadMeshGltf(
+    gltfMeshesToTest.meshes[gltfMeshesToTest.meshes.length]
+  );*/
 
   /*------------------------------------------------------------------------------------------------------*
                             SHOW DEBUG LAYER
@@ -191,21 +171,20 @@ camera.attachControl(canvas, true);
     });
     */
 
-  function loadMeshGltf(meshId) {
+  function loadMeshGltf(meshKeyName) {
     SceneLoader.ImportMeshAsync(
       null,
-      gltfMeshesToTest.baseURL + gltfMeshesToTest.meshes[meshId].dir + "/",
-      gltfMeshesToTest.meshes[meshId].mesh,
+      Meshes.baseURL + Meshes.meshes[meshKeyName].dir + "/",
+      Meshes.meshes[meshKeyName].mesh,
       scene
     ).then(function (result) {
       result.meshes[0].position.x =
-        gltfMeshesToTest.meshes[meshId].position.x || -0.5;
+        Meshes.meshes[meshKeyName].position.x || -0.5;
       result.meshes[0].position.y =
-        gltfMeshesToTest.meshes[meshId].position.y || 1.5;
-      result.meshes[0].position.z =
-        gltfMeshesToTest.meshes[meshId].position.z || 0;
+        Meshes.meshes[meshKeyName].position.y || 1.5;
+      result.meshes[0].position.z = Meshes.meshes[meshKeyName].position.z || 0;
       result.meshes[0].scaling.scaleInPlace(
-        gltfMeshesToTest.meshes[meshId].scale || 1
+        Meshes.meshes[meshKeyName].scale || 1
       );
       camera.setTarget(result.meshes[0], false, false);
       camera.allowUpsideDown = false;
@@ -214,8 +193,14 @@ camera.attachControl(canvas, true);
       camera.upperBetaLimit = (Math.PI / 2) * 1.1;
       camera.lowerRadiusLimit = 3;
       camera.upperRadiusLimit = 45;
-      //camera.pinchPrecision = 1;
-      //camera.pinchDeltaPercentage = 1;
+      // camera sensitivity
+      //sensitivity
+      //camera.angularSensibilityX = 4100;
+      //camera.angularSensibilityY = 6500;
+      //camera.panningSensibility = 100;
+      //camera.speed = 0.5;
+      camera.pinchPrecision = 50.0;
+      //camera.pinchDeltaPercentage = 800;
 
       return result.meshes[0];
     });
