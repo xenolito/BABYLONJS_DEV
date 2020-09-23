@@ -9,7 +9,7 @@ $maincolor: #00ff00;
   height: 100%;
 }
 
-#fps {
+[id*="fps_"] {
   position: absolute;
   background-color: rgba(0, 0, 0, 0.3);
   text-align: center;
