@@ -24,6 +24,7 @@ import DefaultScene from "./default_scene";
 /*** CSS ***/
 import "./css/global.scss";
 import "./css/layouts.scss";
+import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 
 (function () {
   let myScene = new DefaultScene("renderCanvas", {
@@ -96,9 +97,13 @@ import "./css/layouts.scss";
     Object.keys(Meshes.meshes).length - 1
   ];
 
-  let loadMesh = loadMeshGltf(lastMesh);
+  let myModel = loadMeshGltf(lastMesh, meshLoaded);
+  //let loadMesh = loadMeshGltf("deers", meshLoaded);
 
   function loadMeshGltf(meshKeyName) {
+    let camera = myScene._defCamera;
+    SceneLoader.ShowLoadingScreen = true;
+
     SceneLoader.ImportMeshAsync(
       null,
       Meshes.baseURL + Meshes.meshes[meshKeyName].dir + "/",
@@ -113,23 +118,86 @@ import "./css/layouts.scss";
       result.meshes[0].scaling.scaleInPlace(
         Meshes.meshes[meshKeyName].scale || 1
       );
-      myScene._defCamera.setTarget(result.meshes[0], false, false);
-      myScene._defCamera.allowUpsideDown = false;
 
-      myScene._defCamera.lowerBetaLimit = 0.1;
-      myScene._defCamera.upperBetaLimit = (Math.PI / 2) * 1.1;
-      myScene._defCamera.lowerRadiusLimit = 3;
-      myScene._defCamera.upperRadiusLimit = 45;
+      // ! console.table(result.meshes[0]);
+
+      // Default Camera configurations
+
+      camera.setTarget(result.meshes[0], false, false);
+      camera.allowUpsideDown = false;
+
+      //camera.lowerBetaLimit = 0.1;
+      //camera.upperBetaLimit = (Math.PI / 2) * 1.1;
+      camera.lowerRadiusLimit = 3;
+      camera.upperRadiusLimit = 45;
+
+      camera.useFramingBehavior = true;
       // camera sensitivity
       //sensitivity
       //camera.angularSensibilityX = 4100;
       //camera.angularSensibilityY = 6500;
       //camera.panningSensibility = 100;
       //camera.speed = 0.5;
-      myScene._defCamera.pinchPrecision = 50.0;
-      //camera.pinchDeltaPercentage = 800;
 
+      // Zoom Out
+      camera.pinchPrecision = 50.0;
+      //camera.wheelPrecision = 50; //Mouse wheel speed
+      camera.wheelDeltaPercentage = 0.01; //Mouse wheel speed
+
+      camera.useAutoRotationBehavior = true;
+
+      console.log(camera.autoRotationBehavior);
+
+      camera.autoRotationBehavior._zoomStopsAnimation = false;
+      camera.autoRotationBehavior._idleRotationSpeed = 0.5;
+      camera.autoRotationBehavior._idleRotationWaitTime = 1500;
+
+      /*
+      //Buncing behavior
+      camera.useBouncingBehavior = true;
+      camera.bouncingBehavior.transitionDuration = 300; //The transition time of the rebound effect
+      camera.bouncingBehavior.lowerRadiusTransitionRange = 3.5; //The range of the rebound when the closest distance is reached. The default value is 2
+      camera.bouncingBehavior.upperRadiusTransitionRange = -1; //Resilience distance when reaching the farthest distance, the default value is -2
+      camera.bouncingBehavior.autoTransitionRange = false; // Whether to automatically define the lowerRadiusTransitionRange and upperRadiusTransitionRange values, the default value is false. The transition range is set to 5% of the diagonal box in world space
+*/
+
+      /*
+      camera.autoRotationBehavior.idleRotationSpeed ​​= 1; //Automatic rotation speed
+      camera.autoRotationBehavior.idleRotationWaitTime = 1000; //How many times after the user interaction turns on automatic rotation (milliseconds)
+      camera.autoRotationBehavior.idleRotationSpinupTime = 1000; //Time (milliseconds) from the start of automatic rotation to the set rotation speed
+      camera.autoRotationBehavior.zoomStopsAnimation = true; //Set whether the zoom will stop auto-rotating
+        */
+
+      meshLoaded(myScene, result.meshes[0]);
       return result.meshes[0];
     });
+  }
+
+  function meshLoaded(scene, model) {
+    console.log(`Model loaded ==> ${model}`);
+    //rotateModel(scene, model);
+  }
+
+  function rotateModel(scene, model) {
+    /*let axis = new Vector3(1, 1, 1);
+    var axisLine = MeshBuilder.CreateLines(
+      "axis",
+      { points: [axis.scale(-5), axis.scale(5)] },
+      myScene._scene
+    );
+    axis.normalize();*/
+    let theta = Math.PI;
+
+    myScene._scene.beforeRender = function () {
+      theta += 0.01;
+      let axis = new Vector3(0, 1, 0);
+      const quaternion = new Quaternion.RotationAxis(
+        axis,
+        Math.round((theta + Number.EPSILON) * 100) / 100
+      );
+      model.rotationQuaternion = quaternion;
+
+      //console.log(quaternion);
+    };
   }
 })();

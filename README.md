@@ -19,6 +19,6 @@ All development files are in the `/dist` folder.
 
 ## TODO
 
-1.  Implement debugLayer for development... see [Babylon Debug Layer] (https://doc.babylonjs.com/how_to/debug_layer).
+1.  Implement debugLayer for development... see [Babylon Debug Layer](https://doc.babylonjs.com/how_to/debug_layer).
 2.  Implement `servor` on package script for running a local server for `npm run build`
 3.  Add `compression-webpack-plugin` plugin for dist files ¿?

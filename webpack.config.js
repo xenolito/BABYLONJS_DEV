@@ -13,6 +13,7 @@ const javascriptRules = {
     loader: "babel-loader",
     options: {
       presets: ["@babel/preset-env"],
+      plugins: ["@babel/plugin-proposal-optional-chaining"],
     },
   },
 };
@@ -58,6 +59,8 @@ module.exports = {
       Engine: ["@babylonjs/core/Engines/engine", "Engine"],
       Scene: ["@babylonjs/core/scene", "Scene"],
       Vector3: ["@babylonjs/core/Maths/math", "Vector3"],
+      Matrix: ["@babylonjs/core/Maths/math", "Matrix"],
+      Quaternion: ["@babylonjs/core/Maths/math", "Quaternion"],
     }),
     new CopyWebpackPlugin({
       patterns: [
@@ -69,3 +72,5 @@ module.exports = {
     }),
   ],
 };
+
+//import { Matrix, Vector3, Quaternion } from "../Maths/math.vector";

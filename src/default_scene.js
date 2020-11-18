@@ -72,14 +72,10 @@ export default class DefaultScene {
   }
 
   doRender() {
-    //console.log(`Checking renderLoop= ${this._engine.runRenderLoop}`);
     this._engine.runRenderLoop(() => {
-      //console.log("RENDERIZA COJONES " + this._scene.render);
       this._scene.render();
       if (this._fpsUI)
         this._fpsUI.innerHTML = this._engine.getFps().toFixed() + " fps";
-
-      //divFps.innerHTML = engine.getFps().toFixed() + " fps";
     });
   }
 
@@ -100,7 +96,6 @@ export default class DefaultScene {
     //console.log(window.innerWidth);
     window.addEventListener("resize", function () {
       this._engine.resize();
-      console.log(`Ventana redimensionada a ancho: ${window.innerWidth}`);
     });
   }
 }
