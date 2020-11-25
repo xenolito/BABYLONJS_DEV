@@ -24,6 +24,10 @@ body {
   line-height: 1.2rem;
 }
 
+body {
+  background: linear-gradient(135deg, #e80505, #9901ad);
+}
+
 canvas {
   outline: none;
   -webkit-tap-highlight-color: rgba(255, 255, 255, 0); /* mobile webkit */

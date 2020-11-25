@@ -97,8 +97,8 @@ import { Vector3 } from "@babylonjs/core/Maths/math.vector";
     Object.keys(Meshes.meshes).length - 1
   ];
 
-  let myModel = loadMeshGltf(lastMesh, meshLoaded);
-  //let loadMesh = loadMeshGltf("deers", meshLoaded);
+  //let myModel = loadMeshGltf(lastMesh, meshLoaded);
+  let loadMesh = loadMeshGltf("fcar", meshLoaded);
 
   function loadMeshGltf(meshKeyName) {
     let camera = myScene._defCamera;

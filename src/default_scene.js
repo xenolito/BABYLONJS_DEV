@@ -35,7 +35,8 @@ export default class DefaultScene {
 
   createScene() {
     this._scene = new Scene(this._engine);
-    this._scene.clearColor = Color4.FromColor3(Color3.Random());
+    //this._scene.clearColor = Color4.FromColor3(Color3.Random());
+    this._scene.clearColor = new Color4(0, 0, 0, 0);
     this._defCamera = this.createCamera();
     this.createLight();
     this.doRender();
