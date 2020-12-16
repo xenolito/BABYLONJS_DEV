@@ -3,6 +3,9 @@ const htmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const MiniCSSExtractPlugin = require("mini-css-extract-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
+const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
+  .BundleAnalyzerPlugin;
+const RemoveConsolePlugin = require("remove-console-plugin");
 
 const webpack = require("webpack");
 
@@ -42,13 +45,21 @@ const assetsRules = {
 
 module.exports = {
   output: {
-    filename: "js/app.[contentHash].js",
+    filename: "js/app.[hash].js",
     path: path.resolve(__dirname, "dist"),
   },
   module: {
     rules: [javascriptRules, cssRules, assetsRules],
   },
+  devServer: {
+    //port: 6666,
+    //hot: true,
+    //compress: true,
+  },
   plugins: [
+    new RemoveConsolePlugin({
+      remove: ["log"],
+    }),
     new CleanWebpackPlugin(),
     new htmlWebpackPlugin({
       title: "Learning Babylonjs Y OLE",
@@ -72,5 +83,18 @@ module.exports = {
     }),
   ],
 };
+
+console.log("IS DEVSERVER? ===> " + process.env.WEBPACK_DEV_SERVER);
+
+if (process.env.WEBPACK_DEV_SERVER) {
+  module.exports.plugins.push(
+    new BundleAnalyzerPlugin({
+      analyzerMode: "static",
+      analyzerPort: 4000,
+      openAnalyzer: false,
+      defaultSizes: "gzip",
+    })
+  );
+}
 
 //import { Matrix, Vector3, Quaternion } from "../Maths/math.vector";
