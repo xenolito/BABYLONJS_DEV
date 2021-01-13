@@ -25,13 +25,34 @@ import DefaultScene from "./default_scene";
 import "./css/global.scss";
 import "./css/layouts.scss";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
+import firma from "console-signature";
+
+/*import "core-js/stable";
+import "regenerator-runtime/runtime";*/
 
 (function () {
+  firma();
+
   let myScene = new DefaultScene("renderCanvas", {
     showFPS: true, // boolean
     camera: null, // camera obj.
     debug: true, // boolean
   });
+
+  function errorHandle(err) {
+    console.log(err);
+  }
+
+  async function x() {
+    const data = await (
+      await fetch(
+        "https://www.caisocios.com/wp-json/wp/v2/posts/?per_page=20"
+      ).catch(errorHandle)
+    ).json();
+    console.table(data);
+  }
+
+  x();
 
   //  myScene.createScene();
 
@@ -98,8 +119,8 @@ import { Vector3 } from "@babylonjs/core/Maths/math.vector";
   ];
 
   //let myModel = loadMeshGltf(lastMesh, meshLoaded);
+  //let loadMesh = loadMeshGltf("fcar", meshLoaded);
   let loadMesh = loadMeshGltf("fcar", meshLoaded);
-
   function loadMeshGltf(meshKeyName) {
     let camera = myScene._defCamera;
     SceneLoader.ShowLoadingScreen = true;
@@ -132,6 +153,12 @@ import { Vector3 } from "@babylonjs/core/Maths/math.vector";
       camera.upperRadiusLimit = 45;
 
       camera.useFramingBehavior = true;
+      camera.framingBehavior.elevationReturnTime = 1200;
+      camera.framingBehavior.defaultElevation = 0.45;
+      camera.framingBehavior.autoCorrectCameraLimitsAndSensibility = true;
+
+      //console.table(camera);
+
       // camera sensitivity
       //sensitivity
       //camera.angularSensibilityX = 4100;
@@ -146,10 +173,10 @@ import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 
       camera.useAutoRotationBehavior = true;
 
-      console.log(camera.autoRotationBehavior);
+      //console.log(camera.autoRotationBehavior);
 
       camera.autoRotationBehavior._zoomStopsAnimation = false;
-      camera.autoRotationBehavior._idleRotationSpeed = 0.5;
+      camera.autoRotationBehavior._idleRotationSpeed = 0.2;
       camera.autoRotationBehavior._idleRotationWaitTime = 1500;
 
       /*
@@ -168,14 +195,15 @@ import { Vector3 } from "@babylonjs/core/Maths/math.vector";
       camera.autoRotationBehavior.zoomStopsAnimation = true; //Set whether the zoom will stop auto-rotating
         */
 
-      meshLoaded(myScene, result.meshes[0]);
+      meshLoaded(meshKeyName, myScene, result.meshes[0]);
       return result.meshes[0];
     });
   }
 
-  function meshLoaded(scene, model) {
-    console.log(`Model loaded ==> ${model}`);
-    //rotateModel(scene, model);
+  function meshLoaded(keyname, scene, model) {
+    //console.log(`Model loaded ==> ${model}`);
+    console.log(`MESH ${keyname} LOADED!`);
+    //console.dir(model);
   }
 
   function rotateModel(scene, model) {

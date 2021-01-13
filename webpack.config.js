@@ -44,6 +44,9 @@ const assetsRules = {
 };
 
 module.exports = {
+  entry: {
+    app: ["babel-polyfill", "./src/index.js"],
+  },
   output: {
     filename: "js/app.[hash].js",
     path: path.resolve(__dirname, "dist"),

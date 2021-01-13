@@ -9,6 +9,12 @@ const Meshes = {
       scale: 2,
       position: { x: -0.5, y: 1.5 },
     },
+    amongus: {
+      dir: "among-us",
+      mesh: "among-us.glb",
+      scale: 0.03,
+      position: { x: -0.5, y: -2 },
+    },
     brainStem: {
       dir: "BrainStem",
       mesh: "BrainStem.gltf",

@@ -1,6 +1,7 @@
 :root {
   --main-color: #ff1743;
   --def-font-family: Helvetica, Arial, sans-serif;
+  --main-grad: linear-gradient(135deg, #e80505, #9901ad);
 }
 
 /*
@@ -25,10 +26,13 @@ body {
 }
 
 body {
-  background: linear-gradient(135deg, #e80505, #9901ad);
+  background: var(--main-grad);
 }
 
 canvas {
   outline: none;
   -webkit-tap-highlight-color: rgba(255, 255, 255, 0); /* mobile webkit */
+  touch-action: none;
+  user-select: none;
+  -webkit-user-drag: none;
 }
