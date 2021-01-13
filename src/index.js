@@ -44,11 +44,13 @@ import "regenerator-runtime/runtime";*/
   }
 
   async function x() {
+    const url = "https://www.caisocios.com/wp-json/wp/v2/";
     const data = await (
-      await fetch(
-        "https://www.caisocios.com/wp-json/wp/v2/posts/?per_page=20"
-      ).catch(errorHandle)
+      await fetch(url + "pages/?per_page=20").catch(errorHandle)
     ).json();
+
+    Object.keys(data).forEach((key) => console.table(data[key].title));
+
     console.table(data);
   }
 
