@@ -45,7 +45,8 @@ const assetsRules = {
 
 module.exports = {
   entry: {
-    app: ["babel-polyfill", "./src/index.js"],
+    app: ["babel-polyfill", "./src/js/index.js"],
+    //app: ["./src/index.js"],
   },
   output: {
     filename: "js/app.[hash].js",
@@ -88,6 +89,8 @@ module.exports = {
 };
 
 console.log("IS DEVSERVER? ===> " + process.env.WEBPACK_DEV_SERVER);
+
+//process.traceDeprecation = true;
 
 if (process.env.WEBPACK_DEV_SERVER) {
   module.exports.plugins.push(

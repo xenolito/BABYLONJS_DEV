@@ -15,15 +15,16 @@ import { GLTFLoader } from "@babylonjs/loaders/glTF/2.0/glTFLoader";
 import { SceneLoader } from "@babylonjs/core/Loading/sceneLoader";
 
 //Meshes to load config object
-import { Meshes } from "./gltf_models";
+import { Meshes } from "./modules/gltf_models";
 
 /***  Own components  ***/
 
-import DefaultScene from "./default_scene";
+import DefaultScene from "./modules/default_scene";
+import setCameraFitScreen from "./modules/fitMeshToScreenWidth";
 
 /*** CSS ***/
-import "./css/global.scss";
-import "./css/layouts.scss";
+import "../css/global.scss";
+import "../css/layouts.scss";
 import { Vector3 } from "@babylonjs/core/Maths/math.vector";
 import firma from "console-signature";
 
@@ -43,18 +44,21 @@ import "regenerator-runtime/runtime";*/
     console.log(err);
   }
 
-  async function x() {
-    const url = "https://www.caisocios.com/wp-json/wp/v2/";
+  /* async function x() {
+    const url = "https://pictau.com/wp-json/wp/v2/";
     const data = await (
-      await fetch(url + "pages/?per_page=20").catch(errorHandle)
+      await fetch(url + "portfolios/?per_page=100").catch(errorHandle)
     ).json();
 
     Object.keys(data).forEach((key) => console.table(data[key].title));
+
+    data.forEach((item, index) => console.log(item));
 
     console.table(data);
   }
 
   x();
+ */
 
   //  myScene.createScene();
 
@@ -121,38 +125,46 @@ import "regenerator-runtime/runtime";*/
   ];
 
   //let myModel = loadMeshGltf(lastMesh, meshLoaded);
-  //let loadMesh = loadMeshGltf("fcar", meshLoaded);
-  let loadMesh = loadMeshGltf("fcar", meshLoaded);
-  function loadMeshGltf(meshKeyName) {
-    let camera = myScene._defCamera;
+  //let loadMesh = loadMeshGltf("deers", meshLoaded);
+  let loadMesh = loadMeshGltf("fcar", myScene, meshLoaded);
+
+  function loadMeshGltf(meshKeyName, scene, callback) {
+    let camera = scene._defCamera;
     SceneLoader.ShowLoadingScreen = true;
 
     SceneLoader.ImportMeshAsync(
       null,
       Meshes.baseURL + Meshes.meshes[meshKeyName].dir + "/",
       Meshes.meshes[meshKeyName].mesh,
-      myScene._scene
+      scene._scene
     ).then(function (result) {
+      scene.meshLoaded = result;
+
+      console.log(`MeshLoaded: ${scene.meshLoaded}`);
       result.meshes[0].position.x =
         Meshes.meshes[meshKeyName].position.x || -0.5;
       result.meshes[0].position.y =
         Meshes.meshes[meshKeyName].position.y || 1.5;
       result.meshes[0].position.z = Meshes.meshes[meshKeyName].position.z || 0;
-      result.meshes[0].scaling.scaleInPlace(
+      /* result.meshes[0].scaling.scaleInPlace(
         Meshes.meshes[meshKeyName].scale || 1
-      );
+      ); */
+
+      //let size = result.meshes[0].getBoundingInfo().boundingBox.extendSize;
 
       // ! console.table(result.meshes[0]);
 
       // Default Camera configurations
 
-      camera.setTarget(result.meshes[0], false, false);
+      camera.setTarget(result.meshes[1], false, false);
+      camera.isTargetMesh = result.meshes[1];
+
       camera.allowUpsideDown = false;
 
       //camera.lowerBetaLimit = 0.1;
       //camera.upperBetaLimit = (Math.PI / 2) * 1.1;
       camera.lowerRadiusLimit = 3;
-      camera.upperRadiusLimit = 45;
+      //camera.upperRadiusLimit = 45;
 
       camera.useFramingBehavior = true;
       camera.framingBehavior.elevationReturnTime = 1200;
@@ -197,7 +209,32 @@ import "regenerator-runtime/runtime";*/
       camera.autoRotationBehavior.zoomStopsAnimation = true; //Set whether the zoom will stop auto-rotating
         */
 
-      meshLoaded(meshKeyName, myScene, result.meshes[0]);
+      /*       let engine = myScene._engine;
+      let radius = result.meshes[1].getBoundingInfo().boundingSphere
+        .radiusWorld;
+      let aspectRatio = engine.getAspectRatio(camera);
+      let halfMinFov = camera.fov / 2;
+      if (aspectRatio < 1) {
+        halfMinFov = Math.atan(aspectRatio * Math.tan(camera.fov / 2));
+      }
+      let viewRadius = Math.abs(radius / Math.sin(halfMinFov));
+
+      console.log(`Cam Radius after mesh load: ${camera.radius}`);
+
+      camera.radius = viewRadius;
+      camera.upperRadiusLimit = viewRadius * 2;
+
+      console.log(
+        `radius ${radius}`,
+        `aspectRatio ${aspectRatio}`,
+        `halfMinFov ${halfMinFov}`,
+        `viewRadius ${viewRadius}`,
+        `Cam Radius: ${camera.radius}`
+      );
+ */
+      setCameraFitScreen(scene, result.meshes[1]); //ajustamos camera radius so target mesh fit screen responsivly
+
+      callback(meshKeyName, scene, result.meshes[0]);
       return result.meshes[0];
     });
   }

@@ -20,6 +20,7 @@ import { GridMaterial } from "@babylonjs/materials/grid";
 // Required side effects to populate the Create methods on the mesh class. Without this, the bundle would be smaller but the createXXX methods from mesh would not be accessible.
 import "@babylonjs/core/Meshes/meshBuilder";
 import { Color4, Color3 } from "@babylonjs/core/Maths/math.color";
+import setCameraFitScreen from "./fitMeshToScreenWidth";
 
 export default class DefaultScene {
   constructor(canvasID, options) {
@@ -93,10 +94,22 @@ export default class DefaultScene {
     //this._scene.debugLayer.show();
   }
 
+  onResize() {
+    this._engine.resize();
+    if (this._defCamera.isTargetMesh) {
+      setCameraFitScreen(this, this._defCamera.isTargetMesh);
+    }
+  }
+
   resize() {
-    //console.log(window.innerWidth);
-    window.addEventListener("resize", function () {
+    console.log(window.innerWidth);
+    window.addEventListener("resize", this.onResize.bind(this));
+    /*     window.addEventListener("resize", function () {
       this._engine.resize();
-    });
+    }); */
   }
 }
+
+/* if (this._defCamera.isTargetMesh) {
+        setCameraFitScreen(this, this._defCamera.isTargetMesh);
+      } */

@@ -28,7 +28,7 @@ const Meshes = {
     fan: {
       dir: "vintageDeskFan",
       mesh: "vintageFan_animated.gltf",
-      scale: 0.08,
+      scale: 0.3,
       position: { x: 0, y: 0, z: 0 },
     },
     bbox: {
