@@ -8,10 +8,13 @@ export default function cameraToFitScreen(scene, targetMesh, camera) {
   let cam = camera || scene._defCamera;
   let radius = targetMesh.getBoundingInfo().boundingSphere.radiusWorld;
   let aspectRatio = engine.getAspectRatio(cam);
-  let halfMinFov = cam.fov / 2;
-  if (aspectRatio < 1) {
-    halfMinFov = Math.atan(aspectRatio * Math.tan(cam.fov / 2));
-  }
+  //let halfMinFov = cam.fov / 2;
+
+  console.log(`Before update aspectRatio ${aspectRatio}`);
+
+  //if (aspectRatio < 1) {
+  let halfMinFov = Math.atan(aspectRatio * Math.tan(cam.fov / 2));
+  //}
   let viewRadius = Math.abs(radius / Math.sin(halfMinFov));
 
   //console.log(`Cam Radius after mesh load: ${cam.radius}`);
@@ -19,12 +22,11 @@ export default function cameraToFitScreen(scene, targetMesh, camera) {
   cam.radius = viewRadius;
   cam.upperRadiusLimit = viewRadius * 2;
 
-  /*   console.log(
+  console.log(
     `radius ${radius}`,
     `aspectRatio ${aspectRatio}`,
     `halfMinFov ${halfMinFov}`,
     `viewRadius ${viewRadius}`,
     `Cam Radius: ${cam.radius}`
   );
- */
 }
